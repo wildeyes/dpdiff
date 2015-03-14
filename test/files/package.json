@@ -1,0 +1,42 @@
+{
+  "name": "SingleTab",
+  "version": "1.0.0",
+  "description": "Faster, Integrated, Open Source clone of One Tab.",
+  "main": " ",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch-coffee": "coffee -o build/js -bcmw src/coffee/",
+    "init": "coffee bin/init-dev.coffee",
+    "clean": "rimraf build",
+    "autoreload": "onchange build/* -- chromix with chrome://extensions/ reload",
+    "prestart": "npm install",
+    "start": "nodemon bin/start.coffee --watch package.json --watch bin/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wildeyes/SingleTab"
+  },
+  "keywords": [
+    "one",
+    "tab",
+    "single",
+    "chrome",
+    "extension",
+    "browser"
+  ],
+  "author": "xwildeyes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wildeyes/SingleTab/issues"
+  },
+  "homepage": "https://github.com/wildeyes/SingleTab",
+  "dependencies": {
+    "fs-walk": "0.0.1",
+    "glob": "^5.0.3",
+    "inquirer": "^0.8.0",
+    "jquery": "^2.1.3"
+  },
+  "devDependencies": {
+    "shelljs": "^0.3.0"
+  }
+}

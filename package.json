@@ -1,0 +1,34 @@
+{
+  "name": "dpdiff",
+  "version": "1.0.0",
+  "description": "Diff conflicted dropbox conflicts automatically, painlessly.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -w --compilers coffee:coffee-script/register test/test.coffee"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wildeyes/dpdiff"
+  },
+  "keywords": [
+    "dropbox",
+    "diff"
+  ],
+  "author": "xwildeyes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wildeyes/dpdiff/issues"
+  },
+  "homepage": "https://github.com/wildeyes/dpdiff",
+  "devDependencies": {
+    "mocha": "^2.2.1",
+    "should": "^5.2.0"
+  },
+  "dependencies": {
+    "glob": "^5.0.3",
+    "shelljs": "^0.3.0"
+  },
+  "directories": {
+    "test": "test"
+  }
+}
