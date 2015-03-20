@@ -1,34 +1,34 @@
 shell = require 'shelljs/global'
-program = require 'commander'
+_ = require 'lodash'
 readline = require('readline')
 rl = readline.createInterface input: process.stdin, output: process.stderr
 glob = require 'glob'
 ask = rl.question.bind rl
 finishAsking = rl.close.bind rl
 say = console.log.bind console
+log = say
+rxDPConflict = /(.*)\/(.*) \((.*) conflicted copy ([0-9\-]*)\)\.(.*)/
+rxFile = /(.*)\/(.*)\.(.*)/
 
-dropboxConflictedRegex = /.*\/(.*) \((.*) conflicted copy ([0-9\-]*)\)\.(.*)/
+class File
+    constructor: (@path) ->
+        dpFileMatch = @path.match rxDPConflict
+        if (@conflicted = dpFileMatch isnt null)
+            [@path, @base, @name, @from, @date, @ext] = dpFileMatch
+        else if not @conflicted
+            regularFileMatch = @path.match rxFile
+            [@path, @base, @name, @ext] = regularFileMatch
+    matches: (otherFile) -> 
+        otherFile.name is @name and otherFile.ext is @ext and otherFile.base is @base
+    toString: () -> @path
 
-dpdiff = 
+dpdiff =
     findConflictedIn: (path) ->
-        allFiles = glob.sync "#{path}/**/*", {dot: true, nodir: true}
-        conflictedFiles = allFiles.filter (cfFile) ->
-            parts = cfFile.match dropboxConflictedRegex
-            if parts isnt null
-                name = parts[0]
-                extension = parts[parts.length - 1]
-                match = allFiles.filter (file) ->
-                    parts = file.match rxFile
-                    file isnt cfFile and parts[0] is name and parts[1] is extension
-        conflictedFiles.map (cfFile) -> 
-            parts = cfFile.match dropboxConflictedRegex
-            name = parts[0]
-            extension = parts[parts.length - 1]
-            path = cfFile.split '/'
-            base = path.slice(path.length - 1)
-            nonFile = "#{base}/#{name}.#{extension}"
-            conflictedFile: cfFile, nonConflictedFile: nonFile
-
+        allFilePaths = glob.sync "/Users/wie/Dropbox/code/github/dpdiff/#{path}/**/*", {dot: true, nodir: true}
+        allFiles = allFilePaths.map (filePath) -> new File filePath
+        [allConflicted, allNon] = _.partition allFiles, "conflicted", true
+        allConflicted.filter (cfFile) -> allNon.filter((regFile) -> cfFile.matches regFile).length > 0
+        
 main = (file1, file2) ->
     conflictedFile = if rx.conflictedCopy.test(file1) then file1 else file2
     nonConflictedFile = if conflictedFile is file1 then file2 else file1
