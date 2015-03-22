@@ -4,7 +4,7 @@
   "description": "Diff conflicted dropbox conflicts automatically, painlessly.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -w --compilers coffee:coffee-script/register test/test.coffee"
+    "test": "mocha -w --compilers 'coffee:coffee-script/register' test/test.coffee"
   },
   "repository": {
     "type": "git",

@@ -19,17 +19,19 @@ describe 'dpdiff', ->
         if test '-e', 'tmp' then rm '-r', 'tmp/*'
         md 'tmp'
         cp '../test/files/*', '.'
-        conflicts = dpdiff.findConflictedIn('tmp')
+        appPath = path.resolve __dirname, '..', 'tmp'
+        conflicts = dpdiff.findConflictedIn appPath
     it 'should list 4 conflicts', ->
         conflicts.length.should.equal(4)
     context 'when prompting us to pick between the conflicted and the non-conflicted', ->
         conflict = {}
         beforeEach ->
             conflict = conflicts.pop()
+            dpdiff.ask conflict
         it 'should delete the conflicted file if prompt answered with [1]', ->
             process.stdin.write '1\n'
-            (-> fs.checkExists(conflict.nonConflictedFile)).should.not.throw()
-            (-> fs.checkExists(conflict.conflictedFile)).should.throw()
+            (fs.existsSync conflict.path).should.be.true
+            (fs.existsSync conflict.toRegularFile).should.be.false
         #it 'should delete the nonconflicted file if prompt answered with [2]', ->
             #process.stdin.write '2\n'
             #(-> fs.checkExists(conflict.conflictedFile)).should.not.throw()
